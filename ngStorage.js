@@ -86,6 +86,9 @@
                             }
 
                             return $storage.$default(items);
+                        },
+                        $reload: function() {
+                          reload();
                         }
                     },
                     _last$storage,
@@ -99,12 +102,15 @@
                     webStorage = {};
                 }
 
-                for (var i = 0, l = webStorage.length, k; i < l; i++) {
-                    // #8, #10: `webStorage.key(i)` may be an empty string (or throw an exception in IE9 if `webStorage` is empty)
-                    (k = webStorage.key(i)) && 'ngStorage-' === k.slice(0, 10) && ($storage[k.slice(10)] = angular.fromJson(webStorage.getItem(k)));
-                }
+                var reload = function() {
+                  for (var i = 0, l = webStorage.length, k; i < l; i++) {
+                      // #8, #10: `webStorage.key(i)` may be an empty string (or throw an exception in IE9 if `webStorage` is empty)
+                      (k = webStorage.key(i)) && 'ngStorage-' === k.slice(0, 10) && ($storage[k.slice(10)] = angular.fromJson(webStorage.getItem(k)));
+                  }
+                  _last$storage = angular.copy($storage);
+                };
 
-                _last$storage = angular.copy($storage);
+                reload();
 
                 $rootScope.$watch(function() {
                     var temp$storage;
